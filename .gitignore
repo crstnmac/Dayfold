@@ -7,3 +7,7 @@ out
 
 # native helper is built by `npm run build:native`
 resources/bin/
+
+# keep the packaging resources (icons, entitlements) even if a global gitignore ignores build/
+!/build/
+!/.vscode/
