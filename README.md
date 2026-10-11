@@ -2,6 +2,42 @@
 
 A local-first personal productivity dashboard for macOS (Electron, React, TypeScript).
 
+![Today view in Dayfold](docs/screenshots/today.png)
+
+## Built for voice
+
+Dayfold is designed to be **spoken to**. Almost every change goes through one plain-language command
+bar, so you can run your whole day by dictating with [Wispr Flow](https://wisprflow.ai) (or any
+dictation tool). There are no forms to fill in and no dropdowns to aim at.
+
+1. Press `⌥Space` from any app, or `⌘K` inside Dayfold.
+2. Hold your Wispr Flow key and talk: _"add task send the report to Atlas by friday"_, then _"done with the invoice"_.
+3. Dayfold parses what you said, applies it and shows a toast with **Undo**.
+
+Why it works well with dictation:
+
+- **Forgiving parsing.** Names are matched loosely (`done with the invoice` finds "Send the October
+  invoice"), and dates are spoken the way people say them (`tomorrow`, `next monday`, `in 3 days`).
+  Dictation rarely gives you exact titles, so the app does not ask for them.
+- **Nothing is lost.** If a command is not understood, your words go to the **Inbox** instead of being
+  dropped, so a misheard sentence costs nothing.
+- **Safe to talk at.** If two items match, Dayfold shows a short list to pick from rather than
+  guessing. Every change is undoable with `⌘Z` or by saying `undo`.
+- **Hands-free capture.** `⌥Space` opens a small bar over whatever you are doing, so a thought is
+  saved in a few seconds without switching apps.
+
+Dayfold does not ship its own speech recognition; the transcript comes from your dictation tool and
+lands in a normal text field. That keeps audio on your terms and everything else on your Mac.
+See the [demo script](docs/DEMO_SCRIPT.md) for a walkthrough.
+
+<p align="center">
+  <img src="docs/screenshots/command-bar.png" alt="Command bar after dictating a new task, with an Undo toast" width="49%">
+  <img src="docs/screenshots/projects.png" alt="My Projects tab" width="49%">
+</p>
+<p align="center">
+  <img src="docs/screenshots/activity.png" alt="Activity tab with local time tracking" width="49%">
+</p>
+
 ## Install
 
 1. Download **`Dayfold-<version>-universal.dmg`** from the
