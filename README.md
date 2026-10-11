@@ -2,6 +2,8 @@
 
 A local-first personal productivity dashboard for macOS (Electron, React, TypeScript).
 
+**[Watch the demo on Loom](https://www.loom.com/share/bd65339146aa48a897e4acb85fa50de0)**
+
 ![Today view in Dayfold](docs/screenshots/today.png)
 
 ## Built for voice
