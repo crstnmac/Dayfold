@@ -1,0 +1,4 @@
+Design pass 1 (2026-10-10): header collapse, toast/footer anchoring, row alignment via --card-spacing,
+Today title/progress, Dump overflow menu < 640px, primary color softened, tab focus ring, type scale,
+Projects card order/ghost controls, EOD equal-height cards, streak hidden at 0, skeleton loading, view fade.
+Not done: task-complete collapse animation (needs list state), dark-mode visual review, Activity/Settings visual review.

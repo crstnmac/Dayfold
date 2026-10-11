@@ -1,0 +1,87 @@
+name: Release
+
+# Builds the macOS app as a universal (Apple Silicon + Intel) .dmg and .zip.
+#
+# The build is signed ad hoc and NOT notarized (there is no Apple Developer account behind it), so
+# macOS asks for one extra approval on first launch. docs/INSTALL.md tells users what to do.
+#
+#   - Push a tag like v1.0.1 (it must match "version" in package.json) to publish a GitHub Release.
+#   - Or run it by hand from the Actions tab to just build, then download the files as an artifact.
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: macos-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check the tag matches package.json
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+
+      - run: npm run typecheck
+      - run: npm test
+
+      # Swift helper (universal), the app, then an ad-hoc signed universal .dmg and .zip in dist/.
+      - run: npm run build:mac:unsigned
+
+      - name: Verify the app bundle
+        run: |
+          app="dist/mac-universal/Dayfold.app"
+          codesign --verify --deep --strict --verbose=1 "$app"
+          echo "app:    $(lipo -archs "$app/Contents/MacOS/Dayfold")"
+          echo "helper: $(lipo -archs "$app/Contents/Resources/bin/ax-tracker")"
+
+      - name: Checksums
+        working-directory: dist
+        run: shasum -a 256 *.dmg *.zip | tee SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Dayfold-macOS
+          path: |
+            dist/*.dmg
+            dist/*.zip
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+
+      - name: Publish the GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          {
+            echo "Download **Dayfold-*-universal.dmg**, open it, and drag Dayfold to Applications."
+            echo
+            echo "This build is **not notarized** by Apple (there is no paid developer account behind it),"
+            echo "so macOS blocks it the first time you open it. Allowing it takes about 30 seconds:"
+            echo "see [How to install](https://github.com/$REPO/blob/main/docs/INSTALL.md)."
+            echo
+            echo "Works on Apple Silicon and Intel Macs running macOS 12 or newer. Verify the download with"
+            echo "\`shasum -a 256 -c SHA256SUMS.txt --ignore-missing\`."
+          } > notes.md
+          gh release create "$GITHUB_REF_NAME" \
+            dist/*.dmg dist/*.zip dist/SHA256SUMS.txt \
+            --title "Dayfold ${GITHUB_REF_NAME#v}" \
+            --notes-file notes.md \
+            --verify-tag

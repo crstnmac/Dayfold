@@ -1,0 +1,38 @@
+appId: com.criston.dayfold
+productName: Dayfold
+copyright: Copyright © 2026 Criston Mascarenhas
+directories:
+  buildResources: build
+files:
+  - out/**
+  - package.json
+  - '!**/*.map'
+# The Swift helper is built by `npm run build:native` into resources/bin and lands in
+# Dayfold.app/Contents/Resources/bin/ax-tracker (process.resourcesPath/bin).
+extraResources:
+  - from: resources/bin
+    to: bin
+    filter:
+      - ax-tracker
+asar: true
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: [universal]
+    - target: zip
+      arch: [universal]
+  # Signing is driven by the environment: CSC_LINK/CSC_KEY_PASSWORD or a keychain identity.
+  # With no identity electron-builder produces an unsigned build.
+  electronLanguages: [en, en-GB]
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  # Notarization runs only when APPLE_ID + APPLE_APP_SPECIFIC_PASSWORD + APPLE_TEAM_ID
+  # (or APPLE_API_KEY/APPLE_API_KEY_ID/APPLE_API_ISSUER) are set; otherwise it is skipped.
+  notarize: true
+dmg:
+  artifactName: ${productName}-${version}-${arch}.${ext}
+npmRebuild: false
+publish: null
