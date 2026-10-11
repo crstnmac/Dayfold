@@ -30,7 +30,6 @@ Why it works well with dictation:
 
 Dayfold does not ship its own speech recognition; the transcript comes from your dictation tool and
 lands in a normal text field. That keeps audio on your terms and everything else on your Mac.
-See the [demo script](docs/DEMO_SCRIPT.md) for a walkthrough.
 
 <p align="center">
   <img src="docs/screenshots/command-bar.png" alt="Command bar after dictating a new task, with an Undo toast" width="49%">
@@ -180,8 +179,7 @@ Dayfold entry and add it again.
 **Settings, Demo Mode, Start Demo Mode** restarts Dayfold on a separate database filled with
 realistic sample projects, tasks, wrap-ups and a week of activity. Your own data is not opened or
 changed, and tracking and backups are off while it is on. Each start builds fresh sample data
-relative to today. Use **Exit** in the header (or Settings) to go back. A script for recording a
-walkthrough is in [docs/DEMO_SCRIPT.md](docs/DEMO_SCRIPT.md).
+relative to today. Use **Exit** in the header (or Settings) to go back.
 
 ### Your data
 
